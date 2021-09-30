@@ -1,31 +1,32 @@
 const db = require('../db')
 const ApiError = require('../errors/ApiError')
+const {Person} = require('../models/models')
 
 class UserController {
-    async createUser(req, res) {
+    async create(req, res) {
         const {name, surname} = req.body
-        // const newPerson = await db.query(
-        //     'INSERT INTO guys.person(name, surname) values($1, $2) RETURNING *', [name, surname])
-        // res.json(newPerson)
-        res.json(name, surname).catch()
+        const person = await Person.create({name, surname})
+        return res.json(person)
     }
 
-    async getUsers(req, res, next) {
-        const {id} = req.query
-        if (!id) {
-            return next(ApiError.badRequest('No id'))
-        }
-        res.json(id)
+    async getAll(req, res) {
+        const persons = await Person.findAll()
+        return res.json(persons)
     }
 
-    async getOneUser(req, res) {
+    async get(req, res) {
+        // const {id} = req.query
+        // if (!id) {
+        //     return next(ApiError.badRequest('No id'))
+        // }
+        // res.json(id)
     }
 
-    async updateUser(req, res) {
+    async update(req, res) {
 
     }
 
-    async deleteUser(req, res) {
+    async delete(req, res) {
 
     }
 }
