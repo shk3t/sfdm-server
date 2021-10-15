@@ -6,8 +6,8 @@ const BloggerService = require('../services/BloggerService')
 class BloggerController {
     async create(req, res, next) {
         try {
-            const {id, name, surname, about} = req.body
-            const blogger = await BloggerService.create(id, name, surname, about)
+            const {id, name, surname, about, cases} = req.body
+            const blogger = await BloggerService.create(id, name, surname, about, cases)
             res.json(blogger)
         } catch (e) {
             res.json(e.message)
@@ -30,11 +30,23 @@ class BloggerController {
     }
 
     async update(req, res, next) {
-
+        try {
+            const {id, name, surname, about} = req.body
+            const blogger = await BloggerService.update(id, name, surname, about)
+            res.json(blogger)
+        } catch (e) {
+            res.json(e.message)
+        }
     }
 
     async delete(req, res, next) {
-
+        try {
+            const {id} = req.params
+            const blogger = await BloggerService.delete(id)
+            res.json(blogger)
+        } catch (e) {
+            res.json(e.message)
+        }
     }
 }
 

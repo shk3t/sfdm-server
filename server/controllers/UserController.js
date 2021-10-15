@@ -39,8 +39,8 @@ class UserController {
 }
 
 // id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-// email: {type: DataTypes.STRING, unique: true, required: true},
-// password: {type: DataTypes.STRING, required: true},
+// email: {type: DataTypes.STRING, unique: true, allowNull: false},
+// password: {type: DataTypes.STRING, allowNull: false},
 // role: {type: DataTypes.STRING, defaultValue: 'User'},
 // isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
 // activationLink: {type: DataTypes.STRING},
