@@ -8,4 +8,11 @@ router.get('/:id', bloggerController.get)
 router.put('/', bloggerController.update)
 router.delete('/:id', bloggerController.delete)
 
+router.post('/cases/', bloggerController.addCases)
+router.get('/cases/:bloggerId', bloggerController.getCases)
+router.delete('/cases/:bloggerId', bloggerController.cleanCases)
+
+// router.post('/rates/', bloggerController.rate)
+// router.delete('/rates/:ownerId', bloggerController.unrate)
+
 module.exports = router

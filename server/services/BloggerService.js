@@ -3,18 +3,9 @@ const ApiError = require("../errors/ApiError");
 const ValidationService = require("./ValidationService");
 
 class BloggerService {
-
     async create(id, name, surname, about, cases) {
-        if (!id || !name || !surname) {
-            throw ApiError.badRequest('Have no id or name or surname')
-        }
-        //TODO make validation: existing id
-        const createdBlogger = await Blogger.create({id, name, surname, about, userId: id})
-        let createdCases = []
-        for (const {name, date} of cases) {
-            createdCases.push(await Case.create({name, date, bloggerId: id}))
-        }
-        return {blogger: createdBlogger, cases: createdCases}
+        await Blogger.create({id, name, surname, about, userId: id})
+        await this.addCases(id, cases)
     }
 
     async getAll() {
@@ -22,28 +13,35 @@ class BloggerService {
     }
 
     async get(id) {
-        await ValidationService.enteredId(id)
-        return await Blogger.findOne({where: {id: id}})
+        const blogger = await Blogger.findByPk(id)
+        const cases = await blogger.getCases(id)
+        return {blogger, cases}
     }
 
     async update(id, name, surname, about) {
-        await ValidationService.enteredId(id)
-        //TODO make validation: existing id
-        return await Blogger.update({name, surname, about}, {where: {id: id}})
+        await Blogger.update({name, surname, about}, {where: {id: id}})
     }
 
     async delete(id) {
-        await ValidationService.enteredId(id)
-        return await Blogger.destroy({where: {id: id}})
-        //TODO clean all cases
+        await this.cleanCases(id)
+        await Blogger.destroy({where: {id: id}})
     }
 
-    // async getAllCases(id) {
-    //     if (!id) {
-    //         throw ApiError.badRequest('Have no id')
-    //     }
-    //     return await Case.create({id, name, surname, about, userId: id})
-    // }
+    async addCases(bloggerId, cases) {
+        for (const {name, date} of cases) {
+            await Case.create({name, date, bloggerId: bloggerId})
+        }
+    }
+
+    async getCases(bloggerId) {
+        // TODO Blogger.getCases()
+        return await Case.findAll({where: {bloggerId: bloggerId}})
+        // return await Blogger.findByPk(bloggerId).then(blogger => blogger.getCases())
+    }
+
+    async cleanCases(bloggerId) {
+        await Case.destroy({where: {bloggerId: bloggerId}})
+    }
 }
 
 module.exports = new BloggerService()

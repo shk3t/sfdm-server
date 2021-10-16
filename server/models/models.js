@@ -7,6 +7,8 @@ const {Blogger, Case, Rate} = require('./blogger-model')
 User.hasOne(Blogger)
 Blogger.belongsTo(User)
 
+User.hasMany(User, {foreignKey: 'sourceId'})
+User.belongsToMany(User, {as: 'destinationId'})
 
 module.exports = {
     User, Token,
