@@ -2,20 +2,25 @@ const sequelize = require('../db')
 const {DataTypes} = require('sequelize')
 
 const User = sequelize.define('user', {
-    // id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: true, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
     role: {type: DataTypes.STRING, defaultValue: 'User'},
     isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
     activationLink: {type: DataTypes.STRING},
+    rating: {type: DataTypes.FLOAT, defaultValue: 0, min: 0, max: 5},
 })
 
 const Token = sequelize.define('token', {
-    // user: {type: DataTypes.Object, ref: 'User'}, //TODO
     refreshToken: {type: DataTypes.STRING, allowNull: false}
+})
+
+const Rate = sequelize.define('rate', {
+    value: {type: DataTypes.FLOAT, allowNull: false, min: 0, max: 5}
 })
 
 User.hasOne(Token)
 Token.belongsTo(User)
 
-module.exports = {User, Token}
+User.belongsToMany(User, {through: 'rate', as: 'source', foreignKey: 'destinationId'})
+
+module.exports = {User, Token, Rate}

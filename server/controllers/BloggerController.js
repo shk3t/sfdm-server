@@ -11,13 +11,17 @@ class BloggerController {
             await BloggerService.create(id, name, surname, about, cases)
             res.json('ok')
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
     async getAll(req, res, next) {
-        const bloggers = await BloggerService.getAll()
-        res.json(bloggers)
+        try {
+            const bloggers = await BloggerService.getAll()
+            res.json(bloggers)
+        } catch (e) {
+            res.json(e.stack)
+        }
     }
 
     async get(req, res, next) {
@@ -26,7 +30,7 @@ class BloggerController {
             const blogger = await BloggerService.get(id)
             res.json(blogger)
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
@@ -36,7 +40,7 @@ class BloggerController {
             await BloggerService.update(id, name, surname, about)
             res.json('ok')
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
@@ -46,7 +50,7 @@ class BloggerController {
             await BloggerService.delete(id)
             res.json('ok')
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
@@ -56,7 +60,7 @@ class BloggerController {
             await BloggerService.addCases(bloggerId, cases)
             res.json('ok')
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
@@ -66,7 +70,7 @@ class BloggerController {
             const cases = await BloggerService.getCases(bloggerId)
             res.json(cases)
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
@@ -76,7 +80,7 @@ class BloggerController {
             await BloggerService.cleanCases(bloggerId)
             res.json('ok')
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 }

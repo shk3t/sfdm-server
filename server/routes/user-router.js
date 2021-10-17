@@ -8,4 +8,8 @@ router.get('/:id', userController.get)
 router.put('/', userController.update)
 router.delete('/:id', userController.delete)
 
+router.post('/rates/', userController.addRates)
+router.get('/rates/:destinationId', userController.getRates)
+router.delete('/rates/:destinationId', userController.cleanRates)
+
 module.exports = router

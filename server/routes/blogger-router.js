@@ -12,7 +12,4 @@ router.post('/cases/', bloggerController.addCases)
 router.get('/cases/:bloggerId', bloggerController.getCases)
 router.delete('/cases/:bloggerId', bloggerController.cleanCases)
 
-// router.post('/rates/', bloggerController.rate)
-// router.delete('/rates/:ownerId', bloggerController.unrate)
-
 module.exports = router

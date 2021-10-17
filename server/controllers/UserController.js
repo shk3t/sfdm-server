@@ -2,21 +2,26 @@ const db = require('../db')
 const {DataTypes} = require("sequelize")
 const ApiError = require('../errors/ApiError')
 const UserService = require('../services/UserService')
+const BloggerService = require("../services/BloggerService");
 
 class UserController {
     async create(req, res, next) {
         try {
             const {email, password} = req.body
-            const user = await UserService.create(email, password)
-            res.json(user)
+            await UserService.create(email, password)
+            res.json('ok')
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
     async getAll(req, res, next) {
-        const users = await UserService.getAll()
-        res.json(users)
+        try {
+            const users = await UserService.getAll()
+            res.json(users)
+        } catch (e) {
+            res.json(e.stack)
+        }
     }
 
     async get(req, res, next) {
@@ -25,24 +30,60 @@ class UserController {
             const user = await UserService.get(id)
             res.json(user)
         } catch (e) {
-            res.json(e.message)
+            res.json(e.stack)
         }
     }
 
     async update(req, res, next) {
-
+        try {
+            const {id, email, password} = req.body
+            await UserService.update(id, email, password)
+            res.json('ok')
+        } catch (e) {
+            res.json(e.stack)
+        }
     }
 
     async delete(req, res, next) {
-
+        try {
+            const {id} = req.params
+            await UserService.delete(id)
+            res.json('ok')
+        } catch (e) {
+            res.json(e.stack)
+        }
     }
-}
 
-// id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-// email: {type: DataTypes.STRING, unique: true, allowNull: false},
-// password: {type: DataTypes.STRING, allowNull: false},
-// role: {type: DataTypes.STRING, defaultValue: 'User'},
-// isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
-// activationLink: {type: DataTypes.STRING},
+    async addRates(req, res, next) {
+        try {
+            const {destinationId, rates} = req.body
+            await UserService.addRates(destinationId, rates)
+            res.json('ok')
+        } catch (e) {
+            res.json(e.stack)
+        }
+    }
+
+    async getRates(req, res, next) {
+        try {
+            const {destinationId} = req.params
+            const rates = await UserService.getRates(destinationId)
+            res.json(rates)
+        } catch (e) {
+            res.json(e.stack)
+        }
+    }
+
+    async cleanRates(req, res, next) {
+        try {
+            const {destinationId} = req.params
+            await UserService.cleanRates(destinationId)
+            res.json('ok')
+        } catch (e) {
+            res.json(e.stack)
+        }
+    }
+
+}
 
 module.exports = new UserController()

@@ -6,7 +6,8 @@ const Blogger = sequelize.define('blogger', {
     surname: {type: DataTypes.STRING, allowNull: false},
     about: {type: DataTypes.TEXT, defaultValue: ''},
     // profilePhoto: {}, //TODO
-    rating: {type: DataTypes.NUMERIC, defaultValue: 0, min: 0, max: 5}, //TODO
+    //TODO social networks
+    //TODO tags
 })
 
 const Case = sequelize.define('case', {
@@ -14,7 +15,7 @@ const Case = sequelize.define('case', {
     date: {type: DataTypes.DATE, allowNull: false}
 })
 
-//TODO replace BloggerService.js with ORM operations
+
 Blogger.hasMany(Case)
 Case.belongsTo(Blogger)
 

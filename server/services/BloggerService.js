@@ -1,5 +1,6 @@
 const {Blogger, Case} = require('../models/models')
 const ApiError = require("../errors/ApiError");
+const UserService = require('../services/UserService')
 const ValidationService = require("./ValidationService");
 
 class BloggerService {
@@ -14,8 +15,9 @@ class BloggerService {
 
     async get(id) {
         const blogger = await Blogger.findByPk(id)
-        const cases = await blogger.getCases(id)
-        return {blogger, cases}
+        blogger.dataValues.cases = await blogger.getCases(id)
+        blogger.dataValues.rating = await UserService.calculateRating(id)
+        return blogger
     }
 
     async update(id, name, surname, about) {
@@ -34,9 +36,7 @@ class BloggerService {
     }
 
     async getCases(bloggerId) {
-        // TODO Blogger.getCases()
         return await Case.findAll({where: {bloggerId: bloggerId}})
-        // return await Blogger.findByPk(bloggerId).then(blogger => blogger.getCases())
     }
 
     async cleanCases(bloggerId) {
