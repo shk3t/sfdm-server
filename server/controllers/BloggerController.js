@@ -56,7 +56,7 @@ class BloggerController {
 
     async createTags(req, res, next) {
         try {
-            const {tags} = req.body
+            const tags = req.body
             await BloggerService.createTags(tags)
             res.json('ok')
         } catch (e) {
@@ -75,7 +75,7 @@ class BloggerController {
 
     async deleteTags(req, res, next) {
         try {
-            const {tags} = req.body
+            const tags = req.body
             await BloggerService.deleteTags(tags)
             res.json('ok')
         } catch (e) {
@@ -85,7 +85,7 @@ class BloggerController {
 
     async createPlatforms(req, res, next) {
         try {
-            const {platforms} = req.body
+            const platforms = req.body
             await BloggerService.createPlatforms(platforms)
             res.json('ok')
         } catch (e) {
@@ -104,7 +104,7 @@ class BloggerController {
 
     async deletePlatforms(req, res, next) {
         try {
-            const {platforms} = req.body
+            const platforms = req.body
             await BloggerService.deletePlatforms(platforms)
             res.json('ok')
         } catch (e) {

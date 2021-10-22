@@ -10,7 +10,7 @@ const ValidationService = require("./ValidationService");
 class BloggerService {
     async create(id, name, surname, about, cases) {
         await Blogger.create({id, name, surname, about, userId: id})
-        await this.addCases(id, cases)
+        await this.addBloggerCases(id, cases)
     }
 
     async getAll() {
@@ -19,9 +19,9 @@ class BloggerService {
 
     async get(id) {
         const blogger = await Blogger.findByPk(id)
-        blogger.dataValues.cases = await blogger.getCases(id)
-        blogger.dataValues.tags = await blogger.getTags(id)
-        blogger.dataValues.platforms = await blogger.getPlatforms(id)
+        blogger.dataValues.cases = await this.getBloggerCases(id)
+        blogger.dataValues.tags = await this.getBloggerTags(id)
+        blogger.dataValues.platforms = await this.getBloggerPlatforms(id)
         blogger.dataValues.rating = await UserService.calculateRating(id)
         return blogger
     }
@@ -96,8 +96,8 @@ class BloggerService {
     }
 
     async addBloggerPlatforms(bloggerId, platforms) {
-        for (const {platformName, subscribers} of platforms) {
-            await BloggerPlatform.create({bloggerId, platformName, subscribers})
+        for (const {name, subscribers} of platforms) {
+            await BloggerPlatform.create({bloggerId, platformName: name, subscribers})
         }
     }
 
