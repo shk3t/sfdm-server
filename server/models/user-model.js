@@ -8,6 +8,7 @@ const User = sequelize.define('user', {
     isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
     activationLink: {type: DataTypes.STRING},
     rating: {type: DataTypes.FLOAT, defaultValue: 0, min: 0, max: 5},
+    // profilePhoto: {}, //TODO
 })
 
 const Token = sequelize.define('token', {

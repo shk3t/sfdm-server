@@ -1,8 +1,12 @@
-const {Blogger, Case} = require('../models/models')
+const {
+    Blogger, Case, Tag, Platform, BloggerTag, BloggerPlatform,
+    Rate,
+} = require('../models/models')
 const ApiError = require("../errors/ApiError");
 const UserService = require('../services/UserService')
 const ValidationService = require("./ValidationService");
 
+//TODO add grouping and filtering
 class BloggerService {
     async create(id, name, surname, about, cases) {
         await Blogger.create({id, name, surname, about, userId: id})
@@ -16,6 +20,8 @@ class BloggerService {
     async get(id) {
         const blogger = await Blogger.findByPk(id)
         blogger.dataValues.cases = await blogger.getCases(id)
+        blogger.dataValues.tags = await blogger.getTags(id)
+        blogger.dataValues.platforms = await blogger.getPlatforms(id)
         blogger.dataValues.rating = await UserService.calculateRating(id)
         return blogger
     }
@@ -25,22 +31,82 @@ class BloggerService {
     }
 
     async delete(id) {
-        await this.cleanCases(id)
+        await this.cleanBloggerCases(id)
         await Blogger.destroy({where: {id: id}})
     }
 
-    async addCases(bloggerId, cases) {
+    async createTags(tags) {
+        for (const name of tags) {
+            await Tag.create({name})
+        }
+    }
+
+    async getAllTags() {
+        return await Tag.findAll()
+    }
+
+    async deleteTags(tags) {
+        for (const name of tags) {
+            await Tag.destroy({where: {name: name}})
+        }
+    }
+
+    async createPlatforms(platforms) {
+        for (const name of platforms) {
+            await Platform.create({name})
+        }
+    }
+
+    async getAllPlatforms() {
+        return await Platform.findAll()
+    }
+
+    async deletePlatforms(platforms) {
+        for (const name of platforms) {
+            await Platform.destroy({where: {name: name}})
+        }
+    }
+
+    async addBloggerCases(bloggerId, cases) {
         for (const {name, date} of cases) {
             await Case.create({name, date, bloggerId: bloggerId})
         }
     }
 
-    async getCases(bloggerId) {
+    async getBloggerCases(bloggerId) {
         return await Case.findAll({where: {bloggerId: bloggerId}})
     }
 
-    async cleanCases(bloggerId) {
+    async cleanBloggerCases(bloggerId) {
         await Case.destroy({where: {bloggerId: bloggerId}})
+    }
+
+    async addBloggerTags(bloggerId, tags) {
+        for (const tagName of tags) {
+            await BloggerTag.create({bloggerId, tagName})
+        }
+    }
+
+    async getBloggerTags(bloggerId) {
+        return await BloggerTag.findAll({where: {bloggerId: bloggerId}})
+    }
+
+    async cleanBloggerTags(bloggerId) {
+        await BloggerTag.destroy({where: {bloggerId: bloggerId}})
+    }
+
+    async addBloggerPlatforms(bloggerId, platforms) {
+        for (const {platformName, subscribers} of platforms) {
+            await BloggerPlatform.create({bloggerId, platformName, subscribers})
+        }
+    }
+
+    async getBloggerPlatforms(bloggerId) {
+        return await BloggerPlatform.findAll({where: {bloggerId: bloggerId}})
+    }
+
+    async cleanBloggerPlatforms(bloggerId) {
+        await BloggerPlatform.destroy({where: {bloggerId: bloggerId}})
     }
 }
 

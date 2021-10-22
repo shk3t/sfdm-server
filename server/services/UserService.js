@@ -1,6 +1,7 @@
 const {User, Blogger, Rate} = require('../models/models')
 const ApiError = require("../errors/ApiError");
 
+//TODO add authorization
 class UserService {
     async create(email, password) {
         await User.create({email, password})
