@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize')
 const Blogger = sequelize.define('blogger', {
     name: {type: DataTypes.STRING, allowNull: false},
     surname: {type: DataTypes.STRING, allowNull: false},
-    about: {type: DataTypes.TEXT, defaultValue: ''},
+    about: {type: DataTypes.TEXT, defaultValue: ''}
 })
 
 const Case = sequelize.define('case', {

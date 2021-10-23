@@ -1,8 +1,4 @@
-const db = require('../db')
-const {DataTypes} = require("sequelize")
-const ApiError = require('../errors/ApiError')
 const UserService = require('../services/UserService')
-const BloggerService = require("../services/BloggerService");
 
 class UserController {
     async create(req, res, next) {
@@ -37,7 +33,9 @@ class UserController {
     async update(req, res, next) {
         try {
             const {id, email, password} = req.body
-            await UserService.update(id, email, password)
+            const image = req.files != null ? req.files.image : undefined
+            console.log(image)
+            await UserService.update(id, email, password, image)
             res.json('ok')
         } catch (e) {
             res.json(e.stack)

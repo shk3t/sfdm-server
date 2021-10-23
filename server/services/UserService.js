@@ -1,8 +1,12 @@
-const {User, Blogger, Rate} = require('../models/models')
-const ApiError = require("../errors/ApiError");
+const uuid = require("uuid")
+const path = require("path")
+const fs = require("fs")
+const {User, Rate} = require('../models/models')
 
 //TODO add authorization
 class UserService {
+
+
     async create(email, password) {
         await User.create({email, password})
     }
@@ -15,12 +19,25 @@ class UserService {
         return await User.findByPk(id)
     }
 
-    async update(email, password) {
-        await User.update({email, password}, {where: {id: id}})
+    async update(id, email, password, image) {
+        let fileName = undefined
+        if (image !== undefined) {
+            await this.deleteImage(id)
+            fileName = uuid.v4() + '.jpg'
+            await image.mv(path.resolve(__dirname, '..', 'static', fileName))
+        }
+        await User.update({id, email, password, image: fileName}, {where: {id: id}})
     }
 
     async delete(id) {
-        await Blogger.destroy({where: {id: id}})
+        await this.deleteImage(id)
+        await User.destroy({where: {id: id}})
+    }
+
+    async deleteImage(id) {
+        const {image} = await this.get(id)
+        if (image != null)
+            await fs.unlinkSync(path.resolve(__dirname, '..', 'static', image))
     }
 
     async addRates(destinationId, rates) {

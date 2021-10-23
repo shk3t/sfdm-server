@@ -1,8 +1,4 @@
-const db = require('../db')
-const {DataTypes} = require("sequelize")
-const ApiError = require('../errors/ApiError')
 const BloggerService = require('../services/BloggerService')
-const {Case, Tag, Platform} = require("../models/models");
 
 class BloggerController {
     async create(req, res, next) {

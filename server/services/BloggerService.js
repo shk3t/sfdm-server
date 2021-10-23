@@ -2,9 +2,7 @@ const {
     Blogger, Case, Tag, Platform, BloggerTag, BloggerPlatform,
     Rate,
 } = require('../models/models')
-const ApiError = require("../errors/ApiError");
 const UserService = require('../services/UserService')
-const ValidationService = require("./ValidationService");
 
 //TODO add grouping and filtering
 class BloggerService {
@@ -19,19 +17,20 @@ class BloggerService {
 
     async get(id) {
         const blogger = await Blogger.findByPk(id)
-        blogger.dataValues.cases = await this.getBloggerCases(id)
-        blogger.dataValues.tags = await this.getBloggerTags(id)
-        blogger.dataValues.platforms = await this.getBloggerPlatforms(id)
-        blogger.dataValues.rating = await UserService.calculateRating(id)
+        if (blogger != null) {
+            blogger.dataValues.cases = await this.getBloggerCases(id)
+            blogger.dataValues.tags = await this.getBloggerTags(id)
+            blogger.dataValues.platforms = await this.getBloggerPlatforms(id)
+            blogger.dataValues.rating = await UserService.calculateRating(id)
+        }
         return blogger
     }
 
-    async update(id, name, surname, about) {
+    async update(id, name, surname, about, image) {
         await Blogger.update({name, surname, about}, {where: {id: id}})
     }
 
     async delete(id) {
-        await this.cleanBloggerCases(id)
         await Blogger.destroy({where: {id: id}})
     }
 
