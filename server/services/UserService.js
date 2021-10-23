@@ -7,21 +7,27 @@ const {User, Rate} = require('../models/models')
 class UserService {
 
 
-    async create(email, password) {
-        await User.create({email, password})
+    async create(email, password, activationLink) {
+        await User.create({email, password, activationLink})
     }
 
-    async getAll() {
-        return await User.findAll()
+    async getAll(page, limit) {
+        page = page || 1
+        limit = limit || 9
+        const offset = (page - 1) * limit
+        return await User.findAndCountAll({limit, offset})
     }
 
-    async get(id) {
-        return await User.findByPk(id)
+    async getOne(id) {
+        if (!isNaN(id))
+            return await User.findByPk(id)
+        else
+            return await User.findOne({where: {email: id}})
     }
 
     async update(id, email, password, image) {
         let fileName = undefined
-        if (image !== undefined) {
+        if (image) {
             await this.deleteImage(id)
             fileName = uuid.v4() + '.jpg'
             await image.mv(path.resolve(__dirname, '..', 'static', fileName))
@@ -36,7 +42,7 @@ class UserService {
 
     async deleteImage(id) {
         const {image} = await this.get(id)
-        if (image != null)
+        if (image)
             await fs.unlinkSync(path.resolve(__dirname, '..', 'static', image))
     }
 

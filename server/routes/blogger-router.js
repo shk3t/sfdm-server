@@ -4,7 +4,7 @@ const bloggerController = require('../controllers/BloggerController')
 
 router.post('/', bloggerController.create)
 router.get('/', bloggerController.getAll)
-router.get('/:id', bloggerController.get)
+router.get('/:id', bloggerController.getOne)
 router.put('/', bloggerController.update)
 router.delete('/:id', bloggerController.delete)
 

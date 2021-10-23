@@ -13,17 +13,18 @@ class UserController {
 
     async getAll(req, res, next) {
         try {
-            const users = await UserService.getAll()
+            let {page, limit} = req.query
+            const users = await UserService.getAll(page, limit)
             res.json(users)
         } catch (e) {
             res.json(e.stack)
         }
     }
 
-    async get(req, res, next) {
+    async getOne(req, res, next) {
         try {
             const {id} = req.params
-            const user = await UserService.get(id)
+            const user = await UserService.getOne(id)
             res.json(user)
         } catch (e) {
             res.json(e.stack)
@@ -33,8 +34,7 @@ class UserController {
     async update(req, res, next) {
         try {
             const {id, email, password} = req.body
-            const image = req.files != null ? req.files.image : undefined
-            console.log(image)
+            const image = req.files ? req.files.image : undefined
             await UserService.update(id, email, password, image)
             res.json('ok')
         } catch (e) {

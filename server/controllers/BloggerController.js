@@ -13,17 +13,18 @@ class BloggerController {
 
     async getAll(req, res, next) {
         try {
-            const bloggers = await BloggerService.getAll()
+            let {page, limit} = req.query
+            const bloggers = await BloggerService.getAll(page, limit)
             res.json(bloggers)
         } catch (e) {
             res.json(e.stack)
         }
     }
 
-    async get(req, res, next) {
+    async getOne(req, res, next) {
         try {
             const {id} = req.params
-            const blogger = await BloggerService.get(id)
+            const blogger = await BloggerService.getOne(id)
             res.json(blogger)
         } catch (e) {
             res.json(e.stack)

@@ -2,7 +2,7 @@ const {
     Blogger, Case, Tag, Platform, BloggerTag, BloggerPlatform,
     Rate,
 } = require('../models/models')
-const UserService = require('../services/UserService')
+const UserService = require('./UserService')
 
 //TODO add grouping and filtering
 class BloggerService {
@@ -11,11 +11,14 @@ class BloggerService {
         await this.addBloggerCases(id, cases)
     }
 
-    async getAll() {
-        return await Blogger.findAll()
+    async getAll(page, limit) {
+        page = page || 1
+        limit = limit || 9
+        const offset = (page - 1) * limit
+        return await Blogger.findAndCountAll({limit, offset})
     }
 
-    async get(id) {
+    async getOne(id) {
         const blogger = await Blogger.findByPk(id)
         if (blogger != null) {
             blogger.dataValues.cases = await this.getBloggerCases(id)
@@ -36,7 +39,9 @@ class BloggerService {
 
     async createTags(tags) {
         for (const name of tags) {
-            await Tag.create({name})
+            try {
+                await Tag.create({name})
+            } catch {}
         }
     }
 
@@ -52,7 +57,9 @@ class BloggerService {
 
     async createPlatforms(platforms) {
         for (const name of platforms) {
-            await Platform.create({name})
+            try {
+                await Platform.create({name})
+            } catch {}
         }
     }
 
@@ -68,7 +75,7 @@ class BloggerService {
 
     async addBloggerCases(bloggerId, cases) {
         for (const {name, date} of cases) {
-            await Case.create({name, date, bloggerId: bloggerId})
+            await Case.create({name, date, bloggerId})
         }
     }
 
