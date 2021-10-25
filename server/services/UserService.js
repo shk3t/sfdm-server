@@ -8,7 +8,7 @@ class UserService {
 
 
     async create(email, password, activationLink) {
-        await User.create({email, password, activationLink})
+        return await User.create({email, password, activationLink})
     }
 
     async getAll(page, limit) {
@@ -41,7 +41,7 @@ class UserService {
     }
 
     async deleteImage(id) {
-        const {image} = await this.get(id)
+        const {image} = await this.getOne(id)
         if (image)
             await fs.unlinkSync(path.resolve(__dirname, '..', 'static', image))
     }

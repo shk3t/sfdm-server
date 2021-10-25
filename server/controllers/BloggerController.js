@@ -3,11 +3,11 @@ const BloggerService = require('../services/BloggerService')
 class BloggerController {
     async create(req, res, next) {
         try {
-            const {id, name, surname, about, cases} = req.body
-            await BloggerService.create(id, name, surname, about, cases)
+            const {id, name, surname, about, cases, tags, platforms} = req.body
+            await BloggerService.create(id, name, surname, about, cases, tags, platforms)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -17,7 +17,7 @@ class BloggerController {
             const bloggers = await BloggerService.getAll(page, limit)
             res.json(bloggers)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -27,7 +27,7 @@ class BloggerController {
             const blogger = await BloggerService.getOne(id)
             res.json(blogger)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -37,7 +37,7 @@ class BloggerController {
             await BloggerService.update(id, name, surname, about)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -47,7 +47,7 @@ class BloggerController {
             await BloggerService.delete(id)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -57,7 +57,7 @@ class BloggerController {
             await BloggerService.createTags(tags)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -66,7 +66,7 @@ class BloggerController {
             const tags = await BloggerService.getAllTags()
             res.json(tags)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -76,7 +76,7 @@ class BloggerController {
             await BloggerService.deleteTags(tags)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -86,7 +86,7 @@ class BloggerController {
             await BloggerService.createPlatforms(platforms)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -95,7 +95,7 @@ class BloggerController {
             const platforms = await BloggerService.getAllPlatforms()
             res.json(platforms)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -105,7 +105,7 @@ class BloggerController {
             await BloggerService.deletePlatforms(platforms)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -115,7 +115,7 @@ class BloggerController {
             await BloggerService.addBloggerCases(bloggerId, cases)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -125,7 +125,7 @@ class BloggerController {
             const cases = await BloggerService.getBloggerCases(bloggerId)
             res.json(cases)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -135,7 +135,7 @@ class BloggerController {
             await BloggerService.cleanBloggerCases(bloggerId)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -145,7 +145,7 @@ class BloggerController {
             await BloggerService.addBloggerTags(bloggerId, tags)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -155,7 +155,7 @@ class BloggerController {
             const tags = await BloggerService.getBloggerTags(bloggerId)
             res.json(tags)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -165,7 +165,7 @@ class BloggerController {
             await BloggerService.cleanBloggerTags(bloggerId)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -175,7 +175,7 @@ class BloggerController {
             await BloggerService.addBloggerPlatforms(bloggerId, platforms)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -185,7 +185,7 @@ class BloggerController {
             const platforms = await BloggerService.getBloggerPlatforms(bloggerId)
             res.json(platforms)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -195,7 +195,7 @@ class BloggerController {
             await BloggerService.cleanBloggerPlatforms(bloggerId)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 }

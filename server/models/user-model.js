@@ -7,7 +7,6 @@ const User = sequelize.define('user', {
     role: {type: DataTypes.STRING, defaultValue: 'User'},
     isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
     activationLink: {type: DataTypes.STRING},
-    rating: {type: DataTypes.FLOAT, defaultValue: 0, min: 0, max: 5},
     image: {type: DataTypes.STRING}
 })
 

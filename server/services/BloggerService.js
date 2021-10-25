@@ -3,33 +3,38 @@ const {
     Rate,
 } = require('../models/models')
 const UserService = require('./UserService')
+const BloggerDto = require('../dtos/BloggerDto')
 
-//TODO add grouping and filtering
 class BloggerService {
-    async create(id, name, surname, about, cases) {
+    async create(id, name, surname, about, cases, tags, platforms) {
         await Blogger.create({id, name, surname, about, userId: id})
         await this.addBloggerCases(id, cases)
+        await this.addBloggerTags(id, tags)
+        await this.addBloggerPlatforms(id, platforms)
     }
 
     async getAll(page, limit) {
         page = page || 1
         limit = limit || 9
         const offset = (page - 1) * limit
-        return await Blogger.findAndCountAll({limit, offset})
+        const {count, rows} = await Blogger.findAndCountAll({limit, offset, attributes: ['id']})
+        const bloggerDtos = await Promise.all(rows.map(row => this.getOne(row.id)))
+        return {count, bloggers: bloggerDtos}
     }
 
     async getOne(id) {
         const blogger = await Blogger.findByPk(id)
         if (blogger != null) {
-            blogger.dataValues.cases = await this.getBloggerCases(id)
-            blogger.dataValues.tags = await this.getBloggerTags(id)
-            blogger.dataValues.platforms = await this.getBloggerPlatforms(id)
-            blogger.dataValues.rating = await UserService.calculateRating(id)
+            const cases = await this.getBloggerCases(id)
+            const tags = await this.getBloggerTags(id)
+            const platforms = await this.getBloggerPlatforms(id)
+            const rating = await UserService.calculateRating(id)
+            return new BloggerDto({blogger, cases, tags, platforms, rating})
         }
-        return blogger
+        return null
     }
 
-    async update(id, name, surname, about, image) {
+    async update(id, name, surname, about) {
         await Blogger.update({name, surname, about}, {where: {id: id}})
     }
 
@@ -74,9 +79,10 @@ class BloggerService {
     }
 
     async addBloggerCases(bloggerId, cases) {
-        for (const {name, date} of cases) {
-            await Case.create({name, date, bloggerId})
-        }
+        if (cases)
+            for (const {name, date} of cases) {
+                await Case.create({name, date, bloggerId})
+            }
     }
 
     async getBloggerCases(bloggerId) {
@@ -88,9 +94,12 @@ class BloggerService {
     }
 
     async addBloggerTags(bloggerId, tags) {
-        for (const tagName of tags) {
-            await BloggerTag.create({bloggerId, tagName})
-        }
+        if (tags)
+            for (const tagName of tags) {
+                try {
+                    await BloggerTag.create({bloggerId, tagName})
+                } catch {}
+            }
     }
 
     async getBloggerTags(bloggerId) {
@@ -102,9 +111,12 @@ class BloggerService {
     }
 
     async addBloggerPlatforms(bloggerId, platforms) {
-        for (const {name, subscribers} of platforms) {
-            await BloggerPlatform.create({bloggerId, platformName: name, subscribers})
-        }
+        if (platforms)
+            for (const {name, subscribers} of platforms) {
+                try {
+                    await BloggerPlatform.create({bloggerId, platformName: name, subscribers})
+                } catch {}
+            }
     }
 
     async getBloggerPlatforms(bloggerId) {

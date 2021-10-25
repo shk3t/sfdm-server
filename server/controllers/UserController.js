@@ -7,7 +7,7 @@ class UserController {
             await UserService.create(email, password)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -17,7 +17,7 @@ class UserController {
             const users = await UserService.getAll(page, limit)
             res.json(users)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -27,7 +27,7 @@ class UserController {
             const user = await UserService.getOne(id)
             res.json(user)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -38,7 +38,7 @@ class UserController {
             await UserService.update(id, email, password, image)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -48,7 +48,7 @@ class UserController {
             await UserService.delete(id)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -58,7 +58,7 @@ class UserController {
             await UserService.addRates(destinationId, rates)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -68,7 +68,7 @@ class UserController {
             const rates = await UserService.getRates(destinationId)
             res.json(rates)
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
@@ -78,7 +78,7 @@ class UserController {
             await UserService.cleanRates(destinationId)
             res.json('ok')
         } catch (e) {
-            res.json(e.stack)
+            next(e)
         }
     }
 
